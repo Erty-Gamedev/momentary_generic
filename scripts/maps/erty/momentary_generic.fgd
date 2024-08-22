@@ -209,7 +209,7 @@
 	volume_3(string) : "Cont. 3 Sound Volume 0.0 - 1.0" : "0.85"
 ]
 
-@PointClass size(-8 -8 0, 8 8 16) color(200 200 20) studio() = momentary_generic_master : "Generic scenery item master"
+@PointClass size(-8 -8 -8, 8 8 8) color(200 200 20) studio() = momentary_generic_master : "Generic scenery item master"
 [
 	targetname(target_source) : "Name"
 	target(target_destination) : "Target"

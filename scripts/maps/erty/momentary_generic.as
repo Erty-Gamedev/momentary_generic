@@ -17,8 +17,8 @@ class CMomentaryGeneric : ScriptBaseAnimating
     array<int> noisesMoving(8, 0);
     array<bool> noisesMovingLoop(8, false);
     array<int> noisesArrived(8, 0);
-    array<string> s_noisesMoving(8, "");
-    array<string> s_noisesArrived(8, "");
+    array<string> s_noisesMoving(8);
+    array<string> s_noisesArrived(8);
     
     array<float> prevSets(8, 0.0);
     array<bool> isMoving(8, false);
@@ -203,10 +203,13 @@ class CMomentaryGenericMaster : ScriptBaseEntity
 }
 
 
-void Register()
+bool blConfigEntityRegistered = RegisterEntities();
+bool RegisterEntities()
 {
     g_CustomEntityFuncs.RegisterCustomEntity("MomentaryGeneric::CMomentaryGeneric", "momentary_generic");
     g_CustomEntityFuncs.RegisterCustomEntity("MomentaryGeneric::CMomentaryGenericMaster", "momentary_generic_master");
+    
+    return g_CustomEntityFuncs.IsCustomEntity("momentary_generic") && g_CustomEntityFuncs.IsCustomEntity("momentary_generic_master");
 }
 
 }
