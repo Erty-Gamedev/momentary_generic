@@ -1,35 +1,17 @@
-/**
-  * momentary_generic is an entity that displays a model and allows
-  * momentary_rot_buttons to manage bone controllers of said model.
-  *
-  * Works in conjunction with momentary_generic_master which
-  * must be targetted by the momentary_rot_buttons (to prevent them from linking).
-  * This master entity also determines which bone controller will be managed.
-  *
-  * @author Erty
-  */
-
-/**
-  * Map initialisation handler.
-  * @return void
-  */
-void MapInit()
+namespace MomentaryGeneric
 {
-    // g_Module.ScriptInfo.SetAuthor("Erty");
-    g_CustomEntityFuncs.RegisterCustomEntity("momentary_generic", "momentary_generic");
-    g_CustomEntityFuncs.RegisterCustomEntity("momentary_generic_master", "momentary_generic_master");
-}
 
 /**
-  * Map activation handler.
-  * @return void
-  */
-void MapActivate()
-{
-    g_Game.AlertMessage(at_console, "momentary_generic loaded.\n");
-}
-
-class momentary_generic : ScriptBaseAnimating
+* momentary_generic is an entity that displays a model and allows
+* momentary_rot_buttons to manage bone controllers of said model.
+*
+* Works in conjunction with momentary_generic_master which
+* must be targetted by the momentary_rot_buttons (to prevent them from linking).
+* This master entity also determines which bone controller will be managed.
+*
+* @author Erty
+*/
+class CMomentaryGeneric : ScriptBaseAnimating
 {
     array<float> volumes = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     array<int> noisesMoving = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -211,7 +193,7 @@ class momentary_generic : ScriptBaseAnimating
 }
 
 
-class momentary_generic_master : ScriptBaseEntity
+class CMomentaryGenericMaster : ScriptBaseEntity
 {
     void Spawn()
     {
@@ -228,4 +210,13 @@ class momentary_generic_master : ScriptBaseEntity
             g_EntityFuncs.FireTargets(self.pev.target, pActivator, self, USE_SET, value);
         }
     }
+}
+
+
+void Register()
+{
+    g_CustomEntityFuncs.RegisterCustomEntity("MomentaryGeneric::CMomentaryGeneric", "momentary_generic");
+    g_CustomEntityFuncs.RegisterCustomEntity("MomentaryGeneric::CMomentaryGenericMaster", "momentary_generic_master");
+}
+
 }
