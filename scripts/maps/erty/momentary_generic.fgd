@@ -45,8 +45,8 @@
 	body(integer) : "Body" : 0
 
 	// Controller 0
-	controller0_min(string) : "Controller 0 min" : "0.0"
-	controller0_max(string) : "Controller 0 max" : "90.0"
+	controller0_min(string) : "Cont. 0 min" : "0.0"
+	controller0_max(string) : "Cont. 0 max" : "90.0"
 	movesnd_0(choices) : "Cont. 0 Move Sound" : 0 =
 	[
 		0: "No Sound"
@@ -86,8 +86,8 @@
 	volume_0(string) : "Cont. 0 Sound Volume 0.0 - 1.0" : "0.85"
 
 	// Controller 1
-	controller1_min(string) : "Controller 1 min" : "0.0"
-	controller1_max(string) : "Controller 1 max" : "90.0"
+	controller1_min(string) : "Cont. 1 min" : "0.0"
+	controller1_max(string) : "Cont. 1 max" : "90.0"
 	movesnd_1(choices) : "Cont. 1 Move Sound" : 0 =
 	[
 		0: "No Sound"
@@ -127,8 +127,8 @@
 	volume_1(string) : "Cont. 1 Sound Volume 0.0 - 1.0" : "0.85"
 	
 	// Controller 2
-	controller2_min(string) : "Controller 2 min" : "0.0"
-	controller2_max(string) : "Controller 2 max" : "90.0"
+	controller2_min(string) : "Cont. 2 min" : "0.0"
+	controller2_max(string) : "Cont. 2 max" : "90.0"
 	movesnd_2(choices) : "Cont. 2 Move Sound" : 0 =
 	[
 		0: "No Sound"
@@ -168,8 +168,8 @@
 	volume_2(string) : "Cont. 2 Sound Volume 0.0 - 1.0" : "0.85"
 	
 	// Controller 3
-	controller3_min(string) : "Controller 3 min" : "0.0"
-	controller3_max(string) : "Controller 3 max" : "90.0"
+	controller3_min(string) : "Cont. 3 min" : "0.0"
+	controller3_max(string) : "Cont. 3 max" : "90.0"
 	movesnd_3(choices) : "Cont. 3 Move Sound" : 0 =
 	[
 		0: "No Sound"
@@ -207,15 +207,6 @@
 	noise_3m(sound) : "Cont. 3 Move Sound Override"
 	noise_3s(sound) : "Cont. 3 Stop Sound Override"
 	volume_3(string) : "Cont. 3 Sound Volume 0.0 - 1.0" : "0.85"
-
-	// controller4_min(string) : "Controller 4 min" : "0.0"
-	// controller4_max(string) : "Controller 4 max" : "90.0"
-	// controller5_min(string) : "Controller 5 min" : "0.0"
-	// controller5_max(string) : "Controller 5 max" : "90.0"
-	// controller6_min(string) : "Controller 6 min" : "0.0"
-	// controller6_max(string) : "Controller 6 max" : "90.0"
-	// controller7_min(string) : "Controller 7 min" : "0.0"
-	// controller7_max(string) : "Controller 7 max" : "90.0"
 ]
 
 @PointClass size(-8 -8 0, 8 8 16) color(200 200 20) studio() = momentary_generic_master : "Generic scenery item master"
