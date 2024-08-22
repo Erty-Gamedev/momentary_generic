@@ -1,0 +1,118 @@
+@PointClass size(-8 -8 0, 8 8 16) color(200 200 20) studio() = momentary_generic : "Generic scenery item"
+[
+	targetname(target_source) : "Name"
+
+	renderfx(choices) : "Render FX" : 0 =
+	[
+		0: "Normal"
+		1: "Slow Pulse"
+		2: "Fast Pulse"
+		3: "Slow Wide Pulse"
+		4: "Fast Wide Pulse"
+		9: "Slow Strobe"
+		10: "Fast Strobe"
+		11: "Faster Strobe"
+		12: "Slow Flicker"
+		13: "Fast Flicker"
+		5: "Slow Fade Away"
+		6: "Fast Fade Away"
+		7: "Slow Become Solid"
+		8: "Fast Become Solid"
+		14: "Constant Glow"
+		15: "Distort"
+		16: "Hologram (Distort + fade)"
+		19: "Glow Shell"
+	]
+	rendermode(choices) : "Render Mode" : 0 =
+	[
+		0: "Normal"
+		1: "Color"
+		2: "Texture"
+		3: "Glow"
+		4: "Solid"
+		5: "Additive"
+	]
+	renderamt(integer) : "FX Amount (1 - 255)"
+	rendercolor(color255) : "FX Color (R G B)" : "0 0 0"
+	effects(choices) : "Lit by Ceiling" : 0 =
+	[
+		0: "No"
+		16: "Yes"
+	]
+
+	model(studio) : "Custom Model" : "models/egg.mdl"
+	skin(integer) : "Skin" : 0
+	body(integer) : "Body" : 0
+
+	controller0_min(string) : "Controller 0 min" : "0.0"
+	controller0_max(string) : "Controller 0 max" : "90.0"
+	controller1_min(string) : "Controller 1 min" : "0.0"
+	controller1_max(string) : "Controller 1 max" : "90.0"
+	controller2_min(string) : "Controller 2 min" : "0.0"
+	controller2_max(string) : "Controller 2 max" : "90.0"
+	controller3_min(string) : "Controller 3 min" : "0.0"
+	controller3_max(string) : "Controller 3 max" : "90.0"
+	controller4_min(string) : "Controller 4 min" : "0.0"
+	controller4_max(string) : "Controller 4 max" : "90.0"
+	controller5_min(string) : "Controller 5 min" : "0.0"
+	controller5_max(string) : "Controller 5 max" : "90.0"
+	controller6_min(string) : "Controller 6 min" : "0.0"
+	controller6_max(string) : "Controller 6 max" : "90.0"
+	controller7_min(string) : "Controller 7 min" : "0.0"
+	controller7_max(string) : "Controller 7 max" : "90.0"
+
+	movesnd(choices) : "Move Sound" : 0 =
+	[
+		0: "No Sound"
+		1: "big elev 1"
+		2: "big elev 2"
+		3: "tech elev 1"
+		4: "tech elev 2"
+		5: "tech elev 3"
+		6: "freight elev 1"
+		7: "freight elev 2"
+		8: "heavy elev"
+		9: "rack elev"
+		10: "rail elev"
+		11: "squeek elev"
+		12: "odd elev 1"
+		13: "odd elev 2"
+	]
+	movesnd_loop(choices) : "Move Sound Loops?" : 1 =
+	[
+		0: "No"
+		1: "Yes"
+	]
+	stopsnd(choices) : "Stop Sound" : 0 =
+	[
+		0: "No Sound"
+		1: "big elev stop1"
+		2: "big elev stop2"
+		3: "freight elev stop"
+		4: "heavy elev stop"
+		5: "rack stop"
+		6: "rail stop"
+		7: "squeek stop"
+		8: "quick stop"
+	]
+	noise(sound) : "Move Sound Override"
+	noise1(sound) : "Stop Sound Override"
+	volume(string) : "Sound Volume 0.0 - 1.0" : "0.85"
+]
+
+@PointClass size(-8 -8 0, 8 8 16) color(200 200 20) studio() = momentary_generic_master : "Generic scenery item master"
+[
+	targetname(target_source) : "Name"
+	target(target_destination) : "Target"
+	frags(choices) : "Controller" : 0 =
+	[
+		0: "Controller 0"
+		1: "Controller 1"
+		2: "Controller 2"
+		3: "Controller 3"
+		// 4: "Mouth 0"
+		// 5: "Mouth 1"
+		// 6: "Mouth 2"
+		// 7: "Mouth 3"
+	]
+]
