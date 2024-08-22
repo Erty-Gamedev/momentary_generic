@@ -31,13 +31,17 @@ void MapActivate()
 
 class momentary_generic : ScriptBaseAnimating
 {
-    float volume;
-    int noiseMoving;
-    bool noiseMovingLoop;
-    int noiseArrived;
-    float prevSet;
-    bool isMoving;
-    bool isPlayingSound;
+    array<float> volumes = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    array<int> noisesMoving = {0, 0, 0, 0, 0, 0, 0, 0};
+    array<bool> noisesMovingLoop = {false, false, false, false, false, false, false, false};
+    array<int> noisesArrived = {0, 0, 0, 0, 0, 0, 0, 0};
+    array<string> s_noisesMoving = {"", "", "", "", "", "", "", ""};
+    array<string> s_noisesArrived = {"", "", "", "", "", "", "", ""};
+    
+    array<float> prevSets = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    array<bool> isMoving = {false, false, false, false, false, false, false, false};
+    array<bool> isPlayingSound = {false, false, false, false, false, false, false, false};
+
     array<array<float>> controllers_minmax =
     {
         {0.0, 90.0}, // controller 0
@@ -50,31 +54,21 @@ class momentary_generic : ScriptBaseAnimating
         {0.0, 90.0}  // controller 7
     };
 
-    bool KeyValue( const string& in szKey, const string& in szValue )
+    bool KeyValue(const string& in szKey, const string& in szValue)
     {
-        if      (szKey == "volume")       volume           = atof(szValue);
-        else if (szKey == "movesnd")      noiseMoving      = atoi(szValue);
-        else if (szKey == "movesnd_loop") noiseMovingLoop =  atoi(szValue) != 0;
-        else if (szKey == "stopsnd")      noiseArrived     = atoi(szValue);
-        else if (szKey == "controller0_min") controllers_minmax[0][0] = atof(szValue);
-        else if (szKey == "controller0_max") controllers_minmax[0][1] = atof(szValue);
-        else if (szKey == "controller1_min") controllers_minmax[1][0] = atof(szValue);
-        else if (szKey == "controller1_max") controllers_minmax[1][1] = atof(szValue);
-        else if (szKey == "controller2_min") controllers_minmax[2][0] = atof(szValue);
-        else if (szKey == "controller2_max") controllers_minmax[2][1] = atof(szValue);
-        else if (szKey == "controller3_min") controllers_minmax[3][0] = atof(szValue);
-        else if (szKey == "controller3_max") controllers_minmax[3][1] = atof(szValue);
-        else if (szKey == "controller4_min") controllers_minmax[4][0] = atof(szValue);
-        else if (szKey == "controller4_max") controllers_minmax[4][1] = atof(szValue);
-        else if (szKey == "controller5_min") controllers_minmax[5][0] = atof(szValue);
-        else if (szKey == "controller5_max") controllers_minmax[5][1] = atof(szValue);
-        else if (szKey == "controller6_min") controllers_minmax[6][0] = atof(szValue);
-        else if (szKey == "controller6_max") controllers_minmax[6][1] = atof(szValue);
-        else if (szKey == "controller7_min") controllers_minmax[7][0] = atof(szValue);
-        else if (szKey == "controller7_max") controllers_minmax[7][1] = atof(szValue);
-        
-        else return BaseClass.KeyValue(szKey, szValue);
-        return true;
+        for (uint i = 0; i < 8; i++)
+        {
+            if (szKey == "volume_" + formatUInt(i)) { volumes[i] = atof(szValue); return true; }
+            else if (szKey == "movesnd_" + formatUInt(i)) { noisesMoving[i] = atoi(szValue); return true; }
+            else if (szKey == "noise_" + formatUInt(i) + "m") { s_noisesMoving[i] = szValue; return true; }
+            else if (szKey == "movesnd_loop_" + formatUInt(i)) { noisesMovingLoop[i] = atoi(szValue) != 0; return true; }
+            else if (szKey == "stopsnd_" + formatUInt(i)) { noisesArrived[i] = atoi(szValue); return true; }
+            else if (szKey == "noise_" + formatUInt(i) + "s") { s_noisesArrived[i] = szValue; return true; }
+            else if (szKey == "controller" + formatUInt(i) + "_min") { controllers_minmax[i][0] = atof(szValue); return true; }
+            else if (szKey == "controller" + formatUInt(i) + "_max") { controllers_minmax[i][1] = atof(szValue); return true; }
+        }
+
+        return BaseClass.KeyValue(szKey, szValue);
     }
 
     void Precache()
@@ -85,91 +79,101 @@ class momentary_generic : ScriptBaseAnimating
             g_Game.PrecacheModel(self.pev.model);
         }
 
-        if (string(self.pev.noise).Length() == 0)
+        for (uint i = 0; i < 8; i++)
         {
-            switch(noiseMoving)
+            if (s_noisesMoving[i].Length() == 0)
             {
-                case 1: self.pev.noise = "plats/bigmove1.wav"; break;
-                case 2: self.pev.noise = "plats/bigmove2.wav"; break;
-                case 3: self.pev.noise = "plats/elevmove1.wav"; break;
-                case 4: self.pev.noise = "plats/elevmove2.wav"; break;
-                case 5: self.pev.noise = "plats/elevmove3.wav"; break;
-                case 6: self.pev.noise = "plats/freightmove1.wav"; break;
-                case 7: self.pev.noise = "plats/freightmove2.wav"; break;
-                case 8: self.pev.noise = "plats/heavymove1.wav"; break;
-                case 9: self.pev.noise = "plats/rackmove1.wav"; break;
-                case 10: self.pev.noise = "plats/railmove1.wav"; break;
-                case 11: self.pev.noise = "plats/squeekmove1.wav"; break;
-                case 12: self.pev.noise = "plats/talkmove1.wav"; break;
-                case 13: self.pev.noise = "plats/talkmove2.wav"; break;
-                default: self.pev.noise = "common/null.wav";
+                switch(noisesMoving[i])
+                {
+                    case 1: s_noisesMoving[i] = "plats/bigmove1.wav"; break;
+                    case 2: s_noisesMoving[i] = "plats/bigmove2.wav"; break;
+                    case 3: s_noisesMoving[i] = "plats/elevmove1.wav"; break;
+                    case 4: s_noisesMoving[i] = "plats/elevmove2.wav"; break;
+                    case 5: s_noisesMoving[i] = "plats/elevmove3.wav"; break;
+                    case 6: s_noisesMoving[i] = "plats/freightmove1.wav"; break;
+                    case 7: s_noisesMoving[i] = "plats/freightmove2.wav"; break;
+                    case 8: s_noisesMoving[i] = "plats/heavymove1.wav"; break;
+                    case 9: s_noisesMoving[i] = "plats/rackmove1.wav"; break;
+                    case 10: s_noisesMoving[i] = "plats/railmove1.wav"; break;
+                    case 11: s_noisesMoving[i] = "plats/squeekmove1.wav"; break;
+                    case 12: s_noisesMoving[i] = "plats/talkmove1.wav"; break;
+                    case 13: s_noisesMoving[i] = "plats/talkmove2.wav"; break;
+                    default: s_noisesMoving[i] = "common/null.wav";
+                }
             }
-        }
-        g_SoundSystem.PrecacheSound(self.pev.noise);
+            g_SoundSystem.PrecacheSound(s_noisesMoving[i]);
 
-        if (string(self.pev.noise1).Length() == 0)
-        {
-            switch(noiseArrived)
+            
+            if (s_noisesArrived[i].Length() == 0)
             {
-                case 1: self.pev.noise1 = "plats/bigstop1.wav"; break;
-                case 2: self.pev.noise1 = "plats/bigstop2.wav"; break;
-                case 3: self.pev.noise1 = "plats/freightstop1.wav"; break;
-                case 4: self.pev.noise1 = "plats/heavystop2.wav"; break;
-                case 5: self.pev.noise1 = "plats/rackstop1.wav"; break;
-                case 6: self.pev.noise1 = "plats/railstop1.wav"; break;
-                case 7: self.pev.noise1 = "plats/squeekstop1.wav"; break;
-                case 8: self.pev.noise1 = "plats/talkstop1.wav"; break;
-                default: self.pev.noise1 = "common/null.wav";
+                switch(noisesArrived[i])
+                {
+                    case 1: s_noisesArrived[i] = "plats/bigstop1.wav"; break;
+                    case 2: s_noisesArrived[i] = "plats/bigstop2.wav"; break;
+                    case 3: s_noisesArrived[i] = "plats/freightstop1.wav"; break;
+                    case 4: s_noisesArrived[i] = "plats/heavystop2.wav"; break;
+                    case 5: s_noisesArrived[i] = "plats/rackstop1.wav"; break;
+                    case 6: s_noisesArrived[i] = "plats/railstop1.wav"; break;
+                    case 7: s_noisesArrived[i] = "plats/squeekstop1.wav"; break;
+                    case 8: s_noisesArrived[i] = "plats/talkstop1.wav"; break;
+                    default: s_noisesArrived[i] = "common/null.wav";
+                }
             }
+            g_SoundSystem.PrecacheSound(s_noisesArrived[i]);
         }
-        g_SoundSystem.PrecacheSound(self.pev.noise1);
     }
 
     void MoveThink()
     {
-        if (isMoving)
-        {
-            if (!isPlayingSound)
-            {
-                if (noiseMovingLoop)
-                {
-                    g_SoundSystem.EmitSound(self.edict(), CHAN_STATIC, self.pev.noise, volume, ATTN_NORM);
-                }
-                else
-                {
-                    g_SoundSystem.EmitSoundDyn(self.edict(), CHAN_STATIC, self.pev.noise, volume, ATTN_NORM, SND_FORCE_SINGLE);
-                }
-                isPlayingSound = true;
-            }
-            
-            self.pev.nextthink = g_Engine.time + 0.1;
-        }
-        else
-        {
-            if (isPlayingSound)
-            {
-                g_SoundSystem.StopSound(self.edict(), CHAN_STATIC, self.pev.noise);
+        bool allStopped = true;
 
-                g_SoundSystem.EmitSound(self.edict(), CHAN_WEAPON, self.pev.noise1, volume, ATTN_NORM);
+        for (uint i = 0; i < 8; i++)
+        {
+            if (isMoving[i])
+            {
+                if (!isPlayingSound[i])
+                {
+                    if (noisesMovingLoop[i])
+                    {
+                        g_SoundSystem.EmitSound(self.edict(), CHAN_STATIC, s_noisesMoving[i], volumes[i], ATTN_NORM);
+                    }
+                    else
+                    {
+                        g_SoundSystem.EmitSoundDyn(self.edict(), CHAN_STATIC, s_noisesMoving[i], volumes[i], ATTN_NORM, SND_FORCE_SINGLE);
+                    }
+                    isPlayingSound[i] = true;
+                }
+                
+                allStopped = false;
             }
-            
-            isPlayingSound = false;
-            self.pev.nextthink = 0;
+            else
+            {
+                if (isPlayingSound[i])
+                {
+                    g_SoundSystem.StopSound(self.edict(), CHAN_STATIC, s_noisesMoving[i]);
+
+                    g_SoundSystem.EmitSound(self.edict(), CHAN_WEAPON, s_noisesArrived[i], volumes[i], ATTN_NORM);
+                }
+                
+                isPlayingSound[i] = false;
+            }
+
+            isMoving[i] = false;
         }
 
-        isMoving = false;
+        if (allStopped) self.pev.nextthink = 0;
+        else self.pev.nextthink = g_Engine.time + 0.1;
     }
 
     void Spawn()
     {
         Precache();
 
-        if (volume > 10) volume = 10;
-        else if (volume < 0) volume = 0;
-
-        prevSet = 0.0;
-        isMoving = false;
-        isPlayingSound = false;
+        for (uint i = 0; i < 8; i++)
+        {
+            if (volumes[i] > 1.0) volumes[i] = 1.0;
+            else if (volumes[i] < 0.0) volumes[i] = 0.0;
+        }
 
         self.pev.solid = SOLID_NOT;
         self.pev.movetype = MOVETYPE_NONE;
@@ -192,11 +196,12 @@ class momentary_generic : ScriptBaseAnimating
         {
             if (self.pev.nextthink == 0) self.pev.nextthink = g_Engine.time + 0.1;
             
-            if (prevSet == value) isMoving = false;
-            else isMoving = true;
-            prevSet = value;
-
             int controller = pCaller.pev.frags;
+
+            if (prevSets[controller] == value) isMoving[controller] = false;
+            else isMoving[controller] = true;
+            prevSets[controller] == value;
+
             float min = controllers_minmax[controller][0];
             float max = controllers_minmax[controller][1];
 
