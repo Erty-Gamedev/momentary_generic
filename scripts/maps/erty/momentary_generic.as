@@ -178,7 +178,7 @@ class CMomentaryGeneric : ScriptBaseAnimating
         {
             if (self.pev.nextthink == 0) self.pev.nextthink = g_Engine.time + 0.1;
             
-            int controller = pCaller.pev.frags;
+            int controller = int(pCaller.pev.frags);
 
             if (prevSets[controller] == value) isMoving[controller] = false;
             else isMoving[controller] = true;
