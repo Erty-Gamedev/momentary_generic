@@ -13,28 +13,18 @@ namespace MomentaryGeneric
 */
 class CMomentaryGeneric : ScriptBaseAnimating
 {
-    array<float> volumes = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    array<int> noisesMoving = {0, 0, 0, 0, 0, 0, 0, 0};
-    array<bool> noisesMovingLoop = {false, false, false, false, false, false, false, false};
-    array<int> noisesArrived = {0, 0, 0, 0, 0, 0, 0, 0};
-    array<string> s_noisesMoving = {"", "", "", "", "", "", "", ""};
-    array<string> s_noisesArrived = {"", "", "", "", "", "", "", ""};
+    array<float> volumes(8, 0.0);
+    array<int> noisesMoving(8, 0);
+    array<bool> noisesMovingLoop(8, false);
+    array<int> noisesArrived(8, 0);
+    array<string> s_noisesMoving(8, "");
+    array<string> s_noisesArrived(8, "");
     
-    array<float> prevSets = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    array<bool> isMoving = {false, false, false, false, false, false, false, false};
-    array<bool> isPlayingSound = {false, false, false, false, false, false, false, false};
+    array<float> prevSets(8, 0.0);
+    array<bool> isMoving(8, false);
+    array<bool> isPlayingSound(8, false);
 
-    array<array<float>> controllers_minmax =
-    {
-        {0.0, 90.0}, // controller 0
-        {0.0, 90.0}, // controller 1
-        {0.0, 90.0}, // controller 2
-        {0.0, 90.0}, // controller 3
-        {0.0, 90.0}, // controller 4
-        {0.0, 90.0}, // controller 5
-        {0.0, 90.0}, // controller 6
-        {0.0, 90.0}  // controller 7
-    };
+    array<Vector2D> controllers_minmax(8, Vector2D(0.0, 90.0));
 
     bool KeyValue(const string& in szKey, const string& in szValue)
     {
@@ -46,8 +36,8 @@ class CMomentaryGeneric : ScriptBaseAnimating
             else if (szKey == "movesnd_loop_" + formatUInt(i)) { noisesMovingLoop[i] = atoi(szValue) != 0; return true; }
             else if (szKey == "stopsnd_" + formatUInt(i)) { noisesArrived[i] = atoi(szValue); return true; }
             else if (szKey == "noise_" + formatUInt(i) + "s") { s_noisesArrived[i] = szValue; return true; }
-            else if (szKey == "controller" + formatUInt(i) + "_min") { controllers_minmax[i][0] = atof(szValue); return true; }
-            else if (szKey == "controller" + formatUInt(i) + "_max") { controllers_minmax[i][1] = atof(szValue); return true; }
+            else if (szKey == "controller" + formatUInt(i) + "_min") { controllers_minmax[i].x = atof(szValue); return true; }
+            else if (szKey == "controller" + formatUInt(i) + "_max") { controllers_minmax[i].y = atof(szValue); return true; }
         }
 
         return BaseClass.KeyValue(szKey, szValue);
@@ -166,7 +156,7 @@ class CMomentaryGeneric : ScriptBaseAnimating
         // Initialize all controllers to minimum value
         for (uint i = 0; i < 8; i++)
         {
-            self.SetBoneController(i, controllers_minmax[i][0]);
+            self.SetBoneController(i, controllers_minmax[i].x);
         }
 
         SetThink(ThinkFunction(this.MoveThink));
@@ -184,8 +174,8 @@ class CMomentaryGeneric : ScriptBaseAnimating
             else isMoving[controller] = true;
             prevSets[controller] == value;
 
-            float min = controllers_minmax[controller][0];
-            float max = controllers_minmax[controller][1];
+            float min = controllers_minmax[controller].x;
+            float max = controllers_minmax[controller].y;
 
             self.SetBoneController(controller, min + (max - min) * value);
         }
